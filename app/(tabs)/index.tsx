@@ -46,10 +46,7 @@ export default function LandingPage() {
         <TopDrivers />
         <TopTeams />
       </View>
-      {/* 
-      Will Provide news Later 
-        <News /> 
-        */}
+      {/*<News />*/}
       <StatusBar style="light" />
     </ScrollView>
   );
