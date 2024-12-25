@@ -30,7 +30,6 @@ export default function CircuitsMap() {
     }
   };
 
-  // Function to calculate the bounding region
   const getBoundingRegion = (locations: LatLng[]): Region => {
     const latitudes = locations.map((loc) => loc.latitude);
     const longitudes = locations.map((loc) => loc.longitude);
