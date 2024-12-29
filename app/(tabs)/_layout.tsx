@@ -62,6 +62,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="news"
+        options={{
+          title: 'News',
+          tabBarIcon: ({ color }) => <FontAwesome name="newspaper-o" size={30} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="social"
         options={{
           title: 'Social Media',

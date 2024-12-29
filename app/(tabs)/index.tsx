@@ -6,7 +6,6 @@ import { View, Text, ScrollView, Image, useWindowDimensions } from 'react-native
 // @ts-ignore
 import banner from '../../assets/banner.jpg';
 
-//import News from '~/components/News';
 import RaceSchedule from '~/components/RaceSchedule';
 import TopDrivers from '~/components/TopDrivers';
 import TopTeams from '~/components/TopTeams';
@@ -46,7 +45,6 @@ export default function LandingPage() {
         <TopDrivers />
         <TopTeams />
       </View>
-      {/*<News />*/}
       <StatusBar style="light" />
     </ScrollView>
   );
