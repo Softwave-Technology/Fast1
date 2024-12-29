@@ -1,26 +1,35 @@
+import { FontAwesome } from '@expo/vector-icons';
+import { Stack } from 'expo-router';
+import { useState } from 'react';
 import { Dimensions, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 export default function News() {
-  const injectedJavaScript = `
-    // Hide unwanted parts of the page
-    document.querySelector('header').style.display = 'none';
-    document.querySelector('footer').style.display = 'none';
-    true; // Required for Android to signal the script completed
-  `;
+  const [url, setUrl] = useState('https://www.formula1.com/en/latest/all.html');
+
+  const reloadPage = () => {
+    setUrl('https://www.formula1.com/en/latest/all.html');
+  };
+
   return (
     <View className="flex-1">
-      <WebView
-        source={{ uri: 'https://www.formula1.com/en/latest/all' }}
-        style={{
-          flex: 1,
-          width: Dimensions.get('window').width,
-          height: Dimensions.get('window').height,
+      <Stack.Screen
+        options={{
+          headerLeft: () => (
+            <FontAwesome
+              name="arrow-left"
+              size={25}
+              color="white"
+              style={{ paddingLeft: 20 }}
+              onPress={reloadPage}
+            />
+          ),
         }}
-        injectedJavaScript={injectedJavaScript}
-        javaScriptEnabled
-        domStorageEnabled
-        startInLoadingState
+      />
+      <WebView
+        key={url}
+        source={{ uri: url }}
+        style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
       />
     </View>
   );
