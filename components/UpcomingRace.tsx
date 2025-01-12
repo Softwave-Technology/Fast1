@@ -6,7 +6,6 @@ import { Race } from '~/types/types';
 type NextRace = Race | null;
 
 export default function UpcomingRace() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [races, setRaces] = useState<Race[]>([]);
   const [loading, setLoading] = useState(false);
   const [nextRace, setNextRace] = useState<NextRace | null>(null);
@@ -61,6 +60,10 @@ export default function UpcomingRace() {
 
   if (loading) {
     return <ActivityIndicator />;
+  }
+
+  if (!races) {
+    return <Text className="text-xl font-bold text-red-500">No races have been found!</Text>;
   }
 
   return (
