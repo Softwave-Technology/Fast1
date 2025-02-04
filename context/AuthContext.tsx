@@ -1,10 +1,17 @@
-import { Session } from '@supabase/supabase-js';
+import { Session, User } from '@supabase/supabase-js';
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 
 import { supabase } from '~/utils/supabase';
 
-const AuthContext = createContext({});
+// Define the shape of the AuthContext value
+interface AuthContextType {
+  session: Session | null;
+  user: User | null;
+}
+
+// Create a context with a default value
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export default function AuthContextProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
@@ -20,7 +27,6 @@ export default function AuthContextProvider({ children }: PropsWithChildren) {
       setSession(session);
     });
 
-    // Cleanup subscription on unmount
     return () => {
       subscription?.subscription.unsubscribe();
     };
@@ -31,8 +37,17 @@ export default function AuthContextProvider({ children }: PropsWithChildren) {
   }
 
   return (
-    <AuthContext.Provider value={{ session, user: session?.user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ session, user: session?.user || null }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+// Custom hook with TypeScript safety
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthContextProvider');
+  }
+  return context;
+};

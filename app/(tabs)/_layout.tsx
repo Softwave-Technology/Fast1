@@ -1,9 +1,4 @@
-import {
-  FontAwesome5,
-  MaterialCommunityIcons,
-  FontAwesome6,
-  FontAwesome,
-} from '@expo/vector-icons';
+import { FontAwesome5, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
 import { Redirect, Tabs } from 'expo-router';
 
 import { useAuth } from '~/context/AuthContext';
@@ -66,13 +61,6 @@ export default function TabLayout() {
         options={{
           title: 'News',
           tabBarIcon: ({ color }) => <FontAwesome name="newspaper-o" size={30} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="social"
-        options={{
-          title: 'Social Media',
-          tabBarIcon: ({ color }) => <FontAwesome6 name="x-twitter" size={30} color={color} />,
         }}
       />
     </Tabs>
