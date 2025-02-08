@@ -1,4 +1,4 @@
-const BASE_URL = 'https://ergast.com/api/f1/current';
+const BASE_URL = 'https://api.jolpi.ca/ergast/f1/2025';
 
 export async function fetchRaceResults(round: string) {
   try {

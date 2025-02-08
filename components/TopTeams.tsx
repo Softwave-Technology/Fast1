@@ -10,7 +10,9 @@ export default function TopConstructors() {
   useEffect(() => {
     const fetchConstructorStandings = async () => {
       try {
-        const response = await fetch('https://ergast.com/api/f1/current/constructorStandings.json');
+        const response = await fetch(
+          'https://api.jolpi.ca/ergast/f1/current/constructorStandings.json'
+        );
         const data = await response.json();
         const constructors = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
 

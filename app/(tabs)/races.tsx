@@ -15,7 +15,7 @@ export default function Home() {
   useEffect(() => {
     setLoading(true);
     const fetchRaces = async () => {
-      const response = await fetch('https://ergast.com/api/f1/current.json');
+      const response = await fetch('https://api.jolpi.ca/ergast/f1/current.json');
       const data = await response.json();
       setRaces(data.MRData.RaceTable.Races);
       setLoading(false);

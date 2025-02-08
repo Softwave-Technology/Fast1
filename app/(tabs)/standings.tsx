@@ -18,14 +18,16 @@ export default function DriverStandings() {
   useEffect(() => {
     setLoading(true);
     const fetchDriverStandings = async () => {
-      const response = await fetch('https://ergast.com/api/f1/current/driverStandings.json');
+      const response = await fetch('https://api.jolpi.ca/ergast/f1/current/driverStandings.json');
       const data = await response.json();
       setDrivers(data.MRData.StandingsTable.StandingsLists[0].DriverStandings);
       setLoading(false);
     };
 
     const fetchConstructorStandings = async () => {
-      const response = await fetch('https://ergast.com/api/f1/current/constructorStandings.json');
+      const response = await fetch(
+        'https://api.jolpi.ca/ergast/f1/current/constructorStandings.json'
+      );
       const data = await response.json();
       setConstructors(data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings);
       setLoading(false);

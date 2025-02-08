@@ -15,7 +15,7 @@ export default function RaceSchedule() {
     const fetchRaceSchedule = async () => {
       setLoading(true);
       try {
-        const response = await fetch('https://ergast.com/api/f1/current.json');
+        const response = await fetch('https://api.jolpi.ca/ergast/f1/current.json');
         const data = await response.json();
         const fetchedRaceSchedule = data.MRData.RaceTable.Races;
         setSchedule(fetchedRaceSchedule);

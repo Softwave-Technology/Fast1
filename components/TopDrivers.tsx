@@ -10,7 +10,7 @@ export default function TopDrivers() {
   useEffect(() => {
     const fetchDriverStandings = async () => {
       try {
-        const response = await fetch('https://ergast.com/api/f1/current/driverStandings.json');
+        const response = await fetch('https://api.jolpi.ca/ergast/f1/current/driverStandings.json');
         const data = await response.json();
         const drivers = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
 
