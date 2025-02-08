@@ -20,7 +20,7 @@ export default function DriverStandings() {
     const fetchDriverStandings = async () => {
       const response = await fetch('https://api.jolpi.ca/ergast/f1/current/driverStandings.json');
       const data = await response.json();
-      setDrivers(data.MRData.StandingsTable.StandingsLists[0].DriverStandings);
+      setDrivers(data.MRData.StandingsTable.StandingsLists[0]?.DriverStandings || []);
       setLoading(false);
     };
 
@@ -29,7 +29,7 @@ export default function DriverStandings() {
         'https://api.jolpi.ca/ergast/f1/current/constructorStandings.json'
       );
       const data = await response.json();
-      setConstructors(data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings);
+      setConstructors(data.MRData.StandingsTable.StandingsLists[0]?.ConstructorStandings || []);
       setLoading(false);
     };
 
@@ -43,6 +43,16 @@ export default function DriverStandings() {
         <Stack.Screen options={{ title: 'Standings' }} />
         <Loading />
       </>
+    );
+  }
+
+  if (drivers.length === 0 && constructors.length === 0) {
+    return (
+      <View className="flex-1 items-center justify-center bg-[#11100f]">
+        <Text className="text-center text-2xl font-bold text-red-600">
+          Season has not started yet!
+        </Text>
+      </View>
     );
   }
 
@@ -77,21 +87,30 @@ export default function DriverStandings() {
         </Pressable>
       </View>
       {activeStandings === 'drivers' ? (
-        <FlashList
-          data={drivers}
-          keyExtractor={(item: DriverStanding) => item.Driver.familyName}
-          renderItem={({ item }) => <DriverListItem item={item} />}
-          estimatedItemSize={200}
-        />
-      ) : (
+        drivers.length > 0 ? (
+          <FlashList
+            data={drivers}
+            keyExtractor={(item: DriverStanding) => item.Driver.familyName}
+            renderItem={({ item }) => <DriverListItem item={item} />}
+            estimatedItemSize={200}
+          />
+        ) : (
+          <Text className="mt-10 text-center text-xl font-bold text-white">
+            No driver standings available yet.
+          </Text>
+        )
+      ) : constructors.length > 0 ? (
         <FlashList
           data={constructors}
           keyExtractor={(item: ConstructorStanding) => item.Constructor.name}
           renderItem={({ item }) => <ConstructorListItem item={item} />}
           estimatedItemSize={200}
         />
+      ) : (
+        <Text className="mt-10 text-center text-xl font-bold text-white">
+          No constructor standings available yet.
+        </Text>
       )}
-
       <View />
     </View>
   );
