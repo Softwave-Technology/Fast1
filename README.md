@@ -10,7 +10,8 @@ Seasonally updated Formula 1 races content with races, drivers, and information 
 The Ergast API provides a comprehensive database of historical Formula 1 data, including race results, driver and constructor standings, circuit information, and more. It is a valuable resource for developers looking to access detailed information about Formula 1.
 
 #### API Base URL
-- **Base URL**: `https://ergast.com/api/f1`
+- **Base URL**: `https://api.jolpi.ca/ergast/f1`
+The Ergast API has been deprecated, and the base url has been changed to api.jolpi.ca starting from 2025 season.
 
 #### Common Endpoints
 Here are some of the commonly used endpoints for accessing specific data:
