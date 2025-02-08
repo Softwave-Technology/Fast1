@@ -37,8 +37,12 @@ export default function RaceSchedule() {
     return <ActivityIndicator />;
   }
 
-  if (!schedule) {
-    return <Text className="text-xl font-bold text-red-500">No Upcoming Race Schedule Found!</Text>;
+  if (schedule.length === 0) {
+    return (
+      <View className="flex-1 items-center justify-center p-4">
+        <Text className="text-lg font-semibold text-white">No upcoming race found!</Text>
+      </View>
+    );
   }
 
   return (
