@@ -11,7 +11,7 @@ The Ergast API provides a comprehensive database of historical Formula 1 data, i
 
 #### API Base URL
 - **Base URL**: `https://api.jolpi.ca/ergast/f1`
-The Ergast API has been deprecated, and the base url has been changed to api.jolpi.ca starting from 2025 season.
+## The Ergast API has been deprecated, and the base url has been changed to api.jolpi.ca starting from 2025 season.
 
 #### Common Endpoints
 Here are some of the commonly used endpoints for accessing specific data:
