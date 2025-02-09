@@ -60,15 +60,17 @@ export default function LastWinners() {
   }
 
   return (
-    <View className="m-2 flex-1 bg-[#2a2a2a] p-4">
+    <View className="flex-1 p-4">
       <Text className="mb-4 text-3xl font-bold text-white">Last Wins</Text>
-      {winners.map((winner) => (
-        <View key={winner.year} className="mb-2">
-          <Text className="text-xl text-white">
-            {winner.year}: {winner.winner} ({winner.team})
-          </Text>
-        </View>
-      ))}
+      <View className="bg-[#2a2a2a] p-2">
+        {winners.map((winner) => (
+          <View key={winner.year} className="mb-2">
+            <Text className="text-xl text-white">
+              {winner.year}: {winner.winner} ({winner.team})
+            </Text>
+          </View>
+        ))}
+      </View>
     </View>
   );
 }
