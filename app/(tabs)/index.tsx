@@ -6,6 +6,7 @@ import { View, Text, ScrollView, Image, useWindowDimensions } from 'react-native
 // @ts-ignore
 import banner from '../../assets/banner.jpg';
 
+import LastWinners from '~/components/LastWinners';
 import RaceSchedule from '~/components/RaceSchedule';
 import TopDrivers from '~/components/TopDrivers';
 import TopTeams from '~/components/TopTeams';
@@ -39,6 +40,7 @@ export default function LandingPage() {
         }}
       />
       <UpcomingRace />
+      <LastWinners />
       <RaceSchedule />
       <Text className="p-4 text-3xl font-bold text-white">Championship</Text>
       <View className="m-2 flex-row justify-between border border-gray-400 p-2">
