@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 
-// Define a type for winners
 type Winner = {
   year: number;
   winner: string;
@@ -9,7 +8,7 @@ type Winner = {
 };
 
 export default function LastWinners() {
-  const [winners, setWinners] = useState<Winner[]>([]); // Explicitly set type
+  const [winners, setWinners] = useState<Winner[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
