@@ -1,8 +1,5 @@
-import { Session } from '@supabase/supabase-js';
 import { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
-
-import { supabase } from '~/utils/supabase';
 
 type Winner = {
   year: number;
@@ -14,18 +11,7 @@ export default function LastWinners() {
   const [winners, setWinners] = useState<Winner[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [session, setSession] = useState<Session | null>(null);
-
   useEffect(() => {
-    const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      setSession(data.session);
-    };
-    checkSession();
-  }, []);
-
-  useEffect(() => {
-    if (!session) return;
     const fetchLastWinners = async () => {
       try {
         // Fetch next race to get circuitId

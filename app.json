@@ -25,7 +25,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anilyavas.fast1"
+      "bundleIdentifier": "com.fast.1"
     },
     "android": {
       "adaptiveIcon": {

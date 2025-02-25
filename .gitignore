@@ -14,8 +14,6 @@ expo-env.d.ts
 .env
 eas.json
 
-google-services.json
-
 
 
 ios

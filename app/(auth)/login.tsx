@@ -1,108 +1,52 @@
-import { router, Stack } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import {
-  Alert,
-  View,
-  TextInput,
-  Pressable,
-  Text,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import { useOAuth, useSignIn, useSignUp } from '@clerk/clerk-expo';
+import { FontAwesome } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { View, Text, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
 
-//@ts-ignore
-import bg from '../../assets/bg.jpg';
+export default function AuthPage() {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [error, setError] = useState('');
+  const { startOAuthFlow: googleAuth } = useOAuth({ strategy: 'oauth_google' });
+  const { signIn, setActive } = useSignIn();
+  const { signUp } = useSignUp();
 
-import { useAuth } from '~/context/AuthContext';
-import { supabase } from '~/utils/supabase';
+  const handleAuth = async () => {};
 
-export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const handleGoogleAuth = React.useCallback(async () => {
+    try {
+      const { createdSessionId } = await googleAuth();
 
-  useEffect(() => {
-    if (user) {
-      router.push('/');
+      if (createdSessionId) {
+        if (setActive) {
+          await setActive({ session: createdSessionId });
+        }
+        router.push('/(tabs)');
+      } else {
+        throw new Error('Google sign-in failed to create a session.');
+      }
+    } catch (error) {
+      console.error('Error while logging in with Google', error);
+      setError('Google sign-in failed. Please try again.');
     }
-  }, [user]);
-
-  async function signInWithEmail() {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) Alert.alert(error.message);
-    setLoading(false);
-    router.push('/');
-  }
+  }, [googleAuth, setActive, router]);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}>
-      <ImageBackground source={bg} resizeMode="cover" className="h-full w-full">
-        <View className="mb-20 mt-5 items-center p-3">
-          <Text className="mb-5 text-3xl font-bold text-white">Welcome!</Text>
+    <LinearGradient style={{ flex: 1 }} colors={['#ff0000', '#1a1a1a']}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}>
+        <View className="flex-1 items-center justify-center">
+          <Text>Auth page</Text>
+          <Pressable
+            className="border-hairline w-3/4 flex-row items-center justify-center gap-4 rounded-lg bg-white p-2"
+            onPress={handleGoogleAuth}>
+            <Text className="text-lg font-bold">Sign in with Google</Text>
+            <FontAwesome name="google" size={20} color="black" />
+          </Pressable>
         </View>
-        <View className="flex-1 gap-2 p-3">
-          <Stack.Screen
-            options={{
-              title: 'Login',
-              headerStyle: { backgroundColor: '#FF1E00' },
-              headerTitleStyle: { color: 'white', fontWeight: 'bold', fontSize: 20 },
-              headerTintColor: 'white',
-              headerBackTitle: 'Back',
-              headerBackVisible: false,
-            }}
-          />
-          <View className="p-2">
-            <Text className="text-xl font-bold text-yellow-300">Email</Text>
-            <TextInput
-              className="rounded border border-gray-600 bg-gray-200 p-4"
-              onChangeText={setEmail}
-              value={email}
-              placeholder="email@address.com"
-              autoCapitalize="none"
-              keyboardType="email-address"
-              placeholderTextColor="black"
-            />
-          </View>
-          <View className="p-2">
-            <Text className="text-xl font-bold text-yellow-300">Password</Text>
-            <TextInput
-              className="rounded border border-gray-600 bg-gray-200 p-4"
-              onChangeText={setPassword}
-              value={password}
-              secureTextEntry
-              placeholder="******"
-              autoCapitalize="none"
-              placeholderTextColor="black"
-            />
-          </View>
-          <View className="mb-5 mt-5 gap-3 p-2">
-            <Pressable
-              className="items-center p-3"
-              onPress={() => {
-                router.push('/(auth)/register');
-              }}>
-              <Text className="rounded-full bg-black p-2 text-xl font-bold text-white shadow-lg shadow-black">
-                Don't have an account? Sign Up
-              </Text>
-            </Pressable>
-            <Pressable
-              className="items-center rounded-lg bg-[#ff1e00] p-3 shadow-md shadow-black"
-              disabled={loading}
-              onPress={signInWithEmail}>
-              <Text className="text-xl font-bold text-white">Sign In</Text>
-            </Pressable>
-          </View>
-        </View>
-      </ImageBackground>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </LinearGradient>
   );
 }

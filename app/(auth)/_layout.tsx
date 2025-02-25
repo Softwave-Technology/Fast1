@@ -1,19 +1,9 @@
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import { useAuth } from '@clerk/clerk-expo';
+import { Redirect, Slot } from 'expo-router';
 
 export default function AuthLayout() {
-  return (
-    <>
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: '#FF1E00' },
-          headerTitleStyle: { color: 'white', fontWeight: 'bold', fontSize: 20 },
-          headerTintColor: 'white',
-          headerBackTitle: 'Back',
-        }}
-      />
-      <StatusBar style="light" />
-    </>
-  );
+  const { isSignedIn } = useAuth();
+
+  if (isSignedIn) return <Redirect href="./(tabs)" />;
+  return <Slot />;
 }
