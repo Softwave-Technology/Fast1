@@ -2,17 +2,14 @@
   "expo": {
     "name": "Fast 1",
     "slug": "fast-1",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "scheme": "fast-1",
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      "expo-secure-store"
-    ],
+    "plugins": ["expo-router", "expo-secure-store"],
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true
@@ -25,9 +22,7 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.fast.1"
@@ -38,7 +33,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.anilyavas.fast1",
-      "versionCode": 1
+      "versionCode": 2
     },
     "extra": {
       "eas": {
