@@ -1,6 +1,3 @@
-import { useClerk } from '@clerk/clerk-expo';
-import { FontAwesome } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, ScrollView, Image, useWindowDimensions } from 'react-native';
 
@@ -14,17 +11,9 @@ import TopTeams from '~/components/TopTeams';
 import UpcomingRace from '~/components/UpcomingRace';
 
 export default function LandingPage() {
-  const { signOut } = useClerk();
   const { width, height } = useWindowDimensions();
   return (
     <ScrollView className="flex-1 bg-[#11100f]">
-      <Tabs.Screen
-        options={{
-          headerRight: () => (
-            <FontAwesome name="close" onPress={() => signOut()} size={25} color="white" />
-          ),
-        }}
-      />
       <Image
         source={banner}
         style={{
