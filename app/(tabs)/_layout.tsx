@@ -1,16 +1,7 @@
-import { useAuth } from '@clerk/clerk-expo';
 import { FontAwesome5, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
-import { Redirect, Tabs } from 'expo-router';
-
-import Loading from '~/components/Loading';
+import { Tabs } from 'expo-router';
 
 export default function TabLayout() {
-  const { isSignedIn, isLoaded } = useAuth();
-
-  if (!isSignedIn) return <Redirect href="./(auth)/login" />;
-
-  if (!isLoaded) return <Loading />;
-
   return (
     <Tabs
       screenOptions={{
