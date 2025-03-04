@@ -1,4 +1,5 @@
-import { View } from 'react-native';
+{
+  /*import { View } from 'react-native';
 
 import News from '~/components/News';
 
@@ -8,4 +9,6 @@ export default function NewsScreen() {
       <News />
     </View>
   );
+}
+*/
 }
