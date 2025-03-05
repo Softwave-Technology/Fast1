@@ -10,14 +10,21 @@ type Winner = {
 export default function LastWinners() {
   const [winners, setWinners] = useState<Winner[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchLastWinners = async () => {
       try {
+        setLoading(true);
+        setError(null);
+
         // Fetch next race to get circuitId
         const nextRaceRes = await fetch('https://api.jolpi.ca/ergast/f1/current/next.json');
+        if (!nextRaceRes.ok) {
+          throw new Error('Failed to fetch next race.');
+        }
         const nextRaceData = await nextRaceRes.json();
-        const circuit = nextRaceData.MRData.RaceTable.Races[0]?.Circuit;
+        const circuit = nextRaceData?.MRData?.RaceTable?.Races?.[0]?.Circuit;
 
         if (!circuit) {
           throw new Error('Next race circuit not found.');
@@ -29,23 +36,32 @@ export default function LastWinners() {
 
         // Fetch last 5 winners
         const winnerPromises = years.map(async (year) => {
-          const response = await fetch(
-            `https://api.jolpi.ca/ergast/f1/${year}/circuits/${circuitId}/results/1.json`
-          );
-          const data = await response.json();
-          const race = data.MRData.RaceTable.Races[0];
+          try {
+            const response = await fetch(
+              `https://api.jolpi.ca/ergast/f1/${year}/circuits/${circuitId}/results/1.json`
+            );
+            if (!response.ok) {
+              throw new Error(`Failed to fetch results for ${year}`);
+            }
+            const data = await response.json();
+            const race = data?.MRData?.RaceTable?.Races?.[0];
 
-          return {
-            year,
-            winner: race?.Results?.[0]?.Driver?.familyName || 'No Race',
-            team: race?.Results?.[0]?.Constructor?.name || 'No Team',
-          };
+            return {
+              year,
+              winner: race?.Results?.[0]?.Driver?.familyName || 'No Race',
+              team: race?.Results?.[0]?.Constructor?.name || 'No Team',
+            };
+          } catch (err) {
+            console.error(`Error fetching year ${year}:`, err);
+            return { year, winner: 'No Data', team: 'No Data' };
+          }
         });
 
         const winnersData: Winner[] = await Promise.all(winnerPromises);
         setWinners(winnersData);
-      } catch (error) {
-        console.error('Failed while fetching winners! ', error);
+      } catch (error: any) {
+        console.error('Error fetching winners:', error);
+        setError(error.message);
       } finally {
         setLoading(false);
       }
@@ -56,6 +72,14 @@ export default function LastWinners() {
 
   if (loading) {
     return <ActivityIndicator className="p-2" />;
+  }
+
+  if (error) {
+    return (
+      <View className="flex-1 p-4">
+        <Text className="text-xl text-red-500">{error}</Text>
+      </View>
+    );
   }
 
   return (
