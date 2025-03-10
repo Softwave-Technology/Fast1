@@ -54,7 +54,7 @@ export default function DriverStandings() {
     <View className="flex-1 bg-[#11100f]">
       <StatusBar style="light" />
       <Stack.Screen options={{ title: 'Standings' }} />
-      <View className="flex-row items-center justify-around gap-5 p-4">
+      <View className="flex-row items-center justify-center gap-5 p-4">
         <Pressable
           className="w-1/2 rounded-xl bg-red-600 p-2"
           onPress={() => setActiveStandings('drivers')}
@@ -80,7 +80,7 @@ export default function DriverStandings() {
           <Text className="text-center text-xl font-bold text-white">Constructors</Text>
         </Pressable>
       </View>
-      <View className="px-4 pb-2">
+      <View className="px-2 pb-2">
         <YearSelector selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
       </View>
       {activeStandings === 'drivers' ? (
