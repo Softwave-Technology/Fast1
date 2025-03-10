@@ -60,7 +60,7 @@ export default function LastWinners() {
         const winnersData: Winner[] = await Promise.all(winnerPromises);
         setWinners(winnersData);
       } catch (error: any) {
-        console.error('Error fetching winners:', error);
+        console.log('Error fetching winners:', error);
         setError(error.message);
       } finally {
         setLoading(false);
