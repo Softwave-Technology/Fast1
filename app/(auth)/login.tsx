@@ -32,10 +32,7 @@ const LoginScreen = () => {
 
       if (result.error) throw result.error;
 
-      Alert.alert(
-        'Success!',
-        isSignUp ? 'Account created. Check your email to verify.' : 'Logged in!'
-      );
+      Alert.alert('Success!', isSignUp ? 'Account created. Logged in!' : 'Logged in!');
       if (!isSignUp) router.push('/(tabs)');
     } catch (error: any) {
       Alert.alert('Error', error.message);

@@ -22,15 +22,6 @@ export default function TabLayout() {
         options={{
           title: 'Racing',
           tabBarIcon: ({ color }) => <FontAwesome5 name="home" size={30} color={color} />,
-          headerRight: () => (
-            <FontAwesome
-              name="power-off"
-              size={20}
-              color="white"
-              className="p-2"
-              onPress={() => supabase.auth.signOut()}
-            />
-          ),
         }}
       />
       <Tabs.Screen
@@ -61,6 +52,22 @@ export default function TabLayout() {
         options={{
           title: 'Circuits',
           tabBarIcon: ({ color }) => <FontAwesome name="map" size={30} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <FontAwesome name="user" size={30} color={color} />,
+          headerRight: () => (
+            <FontAwesome
+              name="power-off"
+              size={20}
+              color="white"
+              className="p-2"
+              onPress={() => supabase.auth.signOut()}
+            />
+          ),
         }}
       />
     </Tabs>
