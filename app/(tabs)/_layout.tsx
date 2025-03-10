@@ -2,9 +2,10 @@ import { FontAwesome5, MaterialCommunityIcons, FontAwesome } from '@expo/vector-
 import { Redirect, Tabs } from 'expo-router';
 
 import { useAuth } from '~/context/AuthContext';
+import { supabase } from '~/utils/supabase';
 
 export default function TabLayout() {
-  const { user } = useAuth();
+  const { user }: any = useAuth();
   if (!user) return <Redirect href="/(auth)/login" />;
   return (
     <Tabs
@@ -19,8 +20,17 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Racing',
           tabBarIcon: ({ color }) => <FontAwesome5 name="home" size={30} color={color} />,
+          headerRight: () => (
+            <FontAwesome
+              name="power-off"
+              size={20}
+              color="white"
+              className="p-2"
+              onPress={() => supabase.auth.signOut()}
+            />
+          ),
         }}
       />
       <Tabs.Screen

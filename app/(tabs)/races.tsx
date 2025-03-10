@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list';
-import { router, Stack } from 'expo-router';
+import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import LottieView from 'lottie-react-native';
 import { useEffect, useState } from 'react';
@@ -33,7 +33,6 @@ export default function Home() {
           alignItems: 'center',
           backgroundColor: '#11100f',
         }}>
-        <Stack.Screen options={{ title: 'Racing' }} />
         <LottieView
           source={require('../../assets/animations/loading.json')}
           autoPlay
@@ -49,7 +48,6 @@ export default function Home() {
 
   return (
     <View className="flex-1 bg-[#11100f]">
-      <Stack.Screen options={{ title: 'Racing' }} />
       <FlashList
         contentContainerStyle={{ padding: 2 }}
         keyExtractor={(item: Race) => item.round}
