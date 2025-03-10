@@ -1,10 +1,11 @@
-const BASE_URL = 'https://api.jolpi.ca/ergast/f1/2025';
-
-export async function fetchRaceResults(round: string) {
+export async function fetchRaceResults(selectedYear: string, round: string) {
   try {
-    const response = await fetch(`${BASE_URL}/${round}/results.json`);
+    const response = await fetch(
+      `https://api.jolpi.ca/ergast/f1/${selectedYear}/${round}/results.json`
+    );
     const data = await response.json();
     const race = data.MRData.RaceTable.Races[0];
+
     return race && race.Results && race.Results.length > 0
       ? { results: race.Results }
       : { results: [], errorMessage: 'This race has not occurred yet. Please check back later.' };
@@ -14,11 +15,14 @@ export async function fetchRaceResults(round: string) {
   }
 }
 
-export async function fetchSprintResults(round: string) {
+export async function fetchSprintResults(selectedYear: string, round: string) {
   try {
-    const response = await fetch(`${BASE_URL}/${round}/sprint.json`);
+    const response = await fetch(
+      `https://api.jolpi.ca/ergast/f1/${selectedYear}/${round}/sprint.json`
+    );
     const data = await response.json();
     const race = data.MRData.RaceTable.Races[0];
+
     return race && race.SprintResults && race.SprintResults.length > 0
       ? { results: race.SprintResults }
       : { results: [], errorMessage: 'Sprint race results are not available for this round.' };
@@ -28,11 +32,14 @@ export async function fetchSprintResults(round: string) {
   }
 }
 
-export async function fetchQualifyingResults(round: string) {
+export async function fetchQualifyingResults(selectedYear: string, round: string) {
   try {
-    const response = await fetch(`${BASE_URL}/${round}/qualifying.json`);
+    const response = await fetch(
+      `https://api.jolpi.ca/ergast/f1/${selectedYear}/${round}/qualifying.json`
+    );
     const data = await response.json();
     const qualifying = data.MRData.RaceTable.Races[0];
+
     return qualifying && qualifying.QualifyingResults && qualifying.QualifyingResults.length > 0
       ? { results: qualifying.QualifyingResults }
       : { results: [], errorMessage: 'No qualifying data available for this race.' };

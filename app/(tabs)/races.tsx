@@ -1,53 +1,60 @@
 import { FlashList } from '@shopify/flash-list';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import LottieView from 'lottie-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
+import Loading from '~/components/Loading';
 import RaceListItem from '~/components/RaceListItem';
+import YearSelector from '~/components/YearSelector';
 import { Race } from '~/types/types';
 
 export default function Home() {
-  const [races, setRaces] = useState([]);
+  const [races, setRaces] = useState<Race[]>([]);
+  const [selectedYear, setSelectedYear] = useState<string>('2025');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    const fetchRaces = async () => {
-      const response = await fetch('https://api.jolpi.ca/ergast/f1/current.json');
-      const data = await response.json();
-      setRaces(data.MRData.RaceTable.Races);
-      setLoading(false);
+    const fetchRaces = async (year: string) => {
+      try {
+        setLoading(true);
+        const response = await fetch(`https://api.jolpi.ca/ergast/f1/${year}.json`);
+        const data = await response.json();
+
+        if (data?.MRData?.RaceTable?.Races) {
+          setRaces(data.MRData.RaceTable.Races);
+        } else {
+          setRaces([]);
+        }
+      } catch (error) {
+        console.error('Error fetching races:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchRaces();
-  }, []);
+    if (selectedYear) {
+      fetchRaces(selectedYear);
+    }
+  }, [selectedYear]);
 
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#11100f',
-        }}>
-        <LottieView
-          source={require('../../assets/animations/loading.json')}
-          autoPlay
-          loop
-          style={{ width: 150, height: 150 }}
-        />
+      <View className="flex-1 items-center justify-center bg-[#11100f]">
+        <Loading />
       </View>
     );
   }
+
   const handlePress = (race: Race) => {
-    router.push(`/${race.round}`);
+    router.push(`/${selectedYear}/${race.round}`);
   };
 
   return (
     <View className="flex-1 bg-[#11100f]">
+      {/* ✅ Correctly pass `setSelectedYear` */}
+      <YearSelector selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
+
       <FlashList
         contentContainerStyle={{ padding: 2 }}
         keyExtractor={(item: Race) => item.round}
@@ -59,8 +66,8 @@ export default function Home() {
           </Pressable>
         )}
       />
+
       <StatusBar style="light" />
-      <View />
     </View>
   );
 }

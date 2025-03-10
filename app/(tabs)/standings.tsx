@@ -1,7 +1,7 @@
 import { FlashList } from '@shopify/flash-list';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, View, Text } from 'react-native';
 
 import ConstructorListItem from '~/components/ConstructorListItem';

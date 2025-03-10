@@ -27,18 +27,20 @@ export default function RaceResultPage() {
   );
   const [loading, setLoading] = useState(true);
   const [selectedResult, setSelectedResult] = useState<'Race' | 'Sprint' | 'Qualifying'>('Race');
-  const { round } = useLocalSearchParams<{ round?: string }>();
+  const { round, selectedYear } = useLocalSearchParams<{ round?: string; selectedYear?: string }>();
+  console.log('Year ', selectedYear);
+  console.log('round ', round);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!round) {
+      if (!round || !selectedYear) {
         setLoading(false);
         return;
       }
       setLoading(true);
 
       try {
-        const raceData = await fetchRaceResults(round);
+        const raceData = await fetchRaceResults(selectedYear, round);
         if (raceData.results.length > 0) {
           setResults(raceData.results);
           setRaceErrorMessage(undefined);
@@ -46,7 +48,7 @@ export default function RaceResultPage() {
           setRaceErrorMessage(raceData.errorMessage);
         }
 
-        const sprintData = await fetchSprintResults(round);
+        const sprintData = await fetchSprintResults(selectedYear, round);
         if (sprintData.results.length > 0) {
           setSprintResults(sprintData.results);
           setSprintErrorMessage(undefined);
@@ -54,7 +56,7 @@ export default function RaceResultPage() {
           setSprintErrorMessage(sprintData.errorMessage);
         }
 
-        const qualifyingData = await fetchQualifyingResults(round);
+        const qualifyingData = await fetchQualifyingResults(selectedYear, round);
         if (qualifyingData.results.length > 0) {
           setQualifyingResults(qualifyingData.results);
           setQualifyingErrorMessage(undefined);
@@ -83,7 +85,7 @@ export default function RaceResultPage() {
             headerStyle: { backgroundColor: '#FF1E00' },
             headerTitleStyle: { color: 'white', fontWeight: 'bold', fontSize: 20 },
             headerTintColor: 'white',
-            headerBackTitleVisible: false,
+            headerBackTitle: 'Back',
           }}
         />
         <Loading />
@@ -99,10 +101,10 @@ export default function RaceResultPage() {
           headerStyle: { backgroundColor: '#FF1E00' },
           headerTitleStyle: { color: 'white', fontWeight: 'bold', fontSize: 20 },
           headerTintColor: 'white',
-          headerBackTitleVisible: false,
+          headerBackTitle: 'Back',
         }}
       />
-      <View className="flex-row items-center justify-around gap-5 p-4">
+      <View className="flex-row items-center justify-center gap-2 p-4">
         <Pressable
           className="w-1/3 rounded-xl bg-red-600 p-1"
           onPress={() => setSelectedResult('Race')}

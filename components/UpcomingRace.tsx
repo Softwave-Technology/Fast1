@@ -82,7 +82,7 @@ export default function UpcomingRace() {
           <Text className="text-sm text-gray-500">No upcoming race available</Text>
         )}
       </View>
-      <View className="mt-2 items-center border border-yellow-400 p-2">
+      <View className="m-2 mt-2 items-center border border-yellow-400 p-2">
         <Text className="mt-2 text-4xl font-bold text-red-600">
           {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
         </Text>
