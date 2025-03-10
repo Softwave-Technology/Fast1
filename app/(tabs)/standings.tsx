@@ -7,35 +7,39 @@ import { Pressable, View, Text } from 'react-native';
 import ConstructorListItem from '~/components/ConstructorListItem';
 import DriverListItem from '~/components/DriverListItem';
 import Loading from '~/components/Loading';
+import YearSelector from '~/components/YearSelector';
 import { ConstructorStanding, DriverStanding } from '~/types/types';
 
 export default function DriverStandings() {
   const [drivers, setDrivers] = useState([]);
   const [constructors, setConstructors] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedYear, setSelectedYear] = useState('2025');
   const [activeStandings, setActiveStandings] = useState<'drivers' | 'constructors'>('drivers');
 
   useEffect(() => {
     setLoading(true);
-    const fetchDriverStandings = async () => {
-      const response = await fetch('https://api.jolpi.ca/ergast/f1/current/driverStandings.json');
+    const fetchDriverStandings = async (year: string) => {
+      const response = await fetch(`https://api.jolpi.ca/ergast/f1/${year}/driverStandings.json`);
       const data = await response.json();
       setDrivers(data.MRData.StandingsTable.StandingsLists[0]?.DriverStandings || []);
       setLoading(false);
     };
 
-    const fetchConstructorStandings = async () => {
+    const fetchConstructorStandings = async (year: string) => {
       const response = await fetch(
-        'https://api.jolpi.ca/ergast/f1/current/constructorStandings.json'
+        `https://api.jolpi.ca/ergast/f1/${year}/constructorStandings.json`
       );
       const data = await response.json();
       setConstructors(data.MRData.StandingsTable.StandingsLists[0]?.ConstructorStandings || []);
       setLoading(false);
     };
 
-    fetchConstructorStandings();
-    fetchDriverStandings();
-  }, []);
+    if (selectedYear) {
+      fetchConstructorStandings(selectedYear);
+      fetchDriverStandings(selectedYear);
+    }
+  }, [selectedYear]);
 
   if (loading) {
     return (
@@ -43,16 +47,6 @@ export default function DriverStandings() {
         <Stack.Screen options={{ title: 'Standings' }} />
         <Loading />
       </>
-    );
-  }
-
-  if (drivers.length === 0 && constructors.length === 0) {
-    return (
-      <View className="flex-1 items-center justify-center bg-[#11100f]">
-        <Text className="text-center text-2xl font-bold text-red-600">
-          Season has not started yet!
-        </Text>
-      </View>
     );
   }
 
@@ -85,6 +79,9 @@ export default function DriverStandings() {
           }>
           <Text className="text-center text-xl font-bold text-white">Constructors</Text>
         </Pressable>
+      </View>
+      <View className="px-4 pb-2">
+        <YearSelector selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
       </View>
       {activeStandings === 'drivers' ? (
         drivers.length > 0 ? (
