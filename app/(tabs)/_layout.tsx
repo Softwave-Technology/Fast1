@@ -6,7 +6,7 @@ import { supabase } from '~/utils/supabase';
 
 export default function TabLayout() {
   const { user }: any = useAuth();
-  if (!user) return <Redirect href="/(auth)/login" />;
+  if (!user) return <Redirect href="/(auth)/onboarding" />;
   return (
     <Tabs
       screenOptions={{
