@@ -29,22 +29,25 @@ export default function YearSelector({
         transparent
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}>
-        <View className="flex-1 justify-center bg-black bg-opacity-80">
+        <View className="flex-1 justify-center bg-transparent bg-opacity-80">
           <View className="mx-5 rounded-lg bg-[#111] p-5">
             <Text className="mb-4 text-xl font-bold text-white">Select Season</Text>
-
             <FlatList
               data={years}
               keyExtractor={(item) => item}
+              style={{ maxHeight: 200 }}
+              showsVerticalScrollIndicator={false}
               renderItem={({ item }) => (
-                <Pressable
-                  className="border-b border-gray-600 py-3"
-                  onPress={() => {
-                    setSelectedYear(item);
-                    setModalVisible(false);
-                  }}>
-                  <Text className="text-center text-lg text-white">{item}</Text>
-                </Pressable>
+                <View className="p-4">
+                  <Pressable
+                    className="border-b border-gray-600 py-3"
+                    onPress={() => {
+                      setSelectedYear(item);
+                      setModalVisible(false);
+                    }}>
+                    <Text className="text-center text-lg text-white">{item}</Text>
+                  </Pressable>
+                </View>
               )}
             />
 
