@@ -87,7 +87,7 @@ export default function DriverStandings() {
         drivers.length > 0 ? (
           <FlashList
             data={drivers}
-            keyExtractor={(item: DriverStanding) => item.Driver.familyName}
+            keyExtractor={(item: DriverStanding) => item.Driver.driverId}
             renderItem={({ item }) => <DriverListItem item={item} />}
             estimatedItemSize={200}
           />

@@ -1,6 +1,8 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text } from 'react-native';
+
+import Loading from './Loading';
 
 import { Race } from '~/types/types';
 
@@ -34,7 +36,7 @@ export default function RaceSchedule() {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator />;
+    return <Loading />;
   }
 
   if (schedule.length === 0) {

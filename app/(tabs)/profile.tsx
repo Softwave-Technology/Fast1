@@ -1,6 +1,6 @@
 import { User } from '@supabase/supabase-js';
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, Alert } from 'react-native';
+import { View, Text, TextInput, Pressable, Alert, SafeAreaView } from 'react-native';
 
 import { supabase } from '../../utils/supabase';
 
@@ -58,51 +58,53 @@ export default function Profile() {
   };
 
   return (
-    <View className="flex-1 bg-[#11100f] p-5">
-      <View className="mb-4 rounded-lg bg-[#1a1a1a] p-4">
-        {/* User Information */}
-        <Text className="text-lg text-white">Email: {user.email}</Text>
+    <SafeAreaView className="flex-1 bg-[#11100f]">
+      <View className="flex-1 bg-[#11100f] p-5">
+        <View className="mb-4 rounded-lg bg-[#1a1a1a] p-4">
+          {/* User Information */}
+          <Text className="text-lg text-white">Email: {user.email}</Text>
+        </View>
+
+        {/* Password Change Form */}
+        <View className="rounded-lg bg-[#1a1a1a] p-4">
+          <Text className="mb-2 text-white">Old Password</Text>
+          <TextInput
+            value={oldPassword}
+            onChangeText={setOldPassword}
+            secureTextEntry
+            placeholder="Enter old password"
+            placeholderTextColor="gray"
+            className="mb-4 rounded bg-[#333333] p-3 text-white"
+          />
+
+          <Text className="mb-2 text-white">New Password</Text>
+          <TextInput
+            value={newPassword}
+            onChangeText={setNewPassword}
+            secureTextEntry
+            placeholder="Enter new password"
+            placeholderTextColor="gray"
+            className="mb-4 rounded bg-[#333333] p-3 text-white"
+          />
+
+          <Text className="mb-2 text-white">Confirm New Password</Text>
+          <TextInput
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+            placeholder="Confirm new password"
+            placeholderTextColor="gray"
+            className="mb-4 rounded bg-[#333333] p-3 text-white"
+          />
+
+          <Pressable
+            onPress={handlePasswordChange}
+            className="items-center rounded-lg bg-red-600 p-4"
+            disabled={loading}>
+            {loading ? <Loading /> : <Text className="font-bold text-white">Change Password</Text>}
+          </Pressable>
+        </View>
       </View>
-
-      {/* Password Change Form */}
-      <View className="rounded-lg bg-[#1a1a1a] p-4">
-        <Text className="mb-2 text-white">Old Password</Text>
-        <TextInput
-          value={oldPassword}
-          onChangeText={setOldPassword}
-          secureTextEntry
-          placeholder="Enter old password"
-          placeholderTextColor="gray"
-          className="mb-4 rounded bg-[#333333] p-3 text-white"
-        />
-
-        <Text className="mb-2 text-white">New Password</Text>
-        <TextInput
-          value={newPassword}
-          onChangeText={setNewPassword}
-          secureTextEntry
-          placeholder="Enter new password"
-          placeholderTextColor="gray"
-          className="mb-4 rounded bg-[#333333] p-3 text-white"
-        />
-
-        <Text className="mb-2 text-white">Confirm New Password</Text>
-        <TextInput
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-          placeholder="Confirm new password"
-          placeholderTextColor="gray"
-          className="mb-4 rounded bg-[#333333] p-3 text-white"
-        />
-
-        <Pressable
-          onPress={handlePasswordChange}
-          className="items-center rounded-lg bg-red-600 p-4"
-          disabled={loading}>
-          {loading ? <Loading /> : <Text className="font-bold text-white">Change Password</Text>}
-        </Pressable>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }

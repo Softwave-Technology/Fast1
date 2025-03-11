@@ -127,13 +127,3 @@ export type SprintRaceData = {
     };
   };
 };
-
-export type DriverInformation = {
-  driverId: string;
-  name_acronym: string;
-  country_code: string;
-  headshot_url: string;
-  full_name: string;
-  team_name: string;
-  team_colour: string;
-};

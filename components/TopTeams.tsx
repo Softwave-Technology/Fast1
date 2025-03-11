@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text } from 'react-native';
+
+import Loading from './Loading';
 
 import { ConstructorStanding } from '~/types/types';
 
@@ -37,7 +39,7 @@ export default function TopConstructors() {
   if (loading) {
     return (
       <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#ffffff" />
+        <Loading />
       </View>
     );
   }

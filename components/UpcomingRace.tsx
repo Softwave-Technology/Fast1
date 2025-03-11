@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text } from 'react-native';
+
+import Loading from './Loading';
 
 import { Race } from '~/types/types';
 
@@ -59,7 +61,7 @@ export default function UpcomingRace() {
   }, [nextRace]);
 
   if (loading) {
-    return <ActivityIndicator />;
+    return <Loading />;
   }
 
   if (!races) {
