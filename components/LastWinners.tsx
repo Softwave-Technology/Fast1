@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text } from 'react-native';
+
+import Loading from './Loading';
 
 type Winner = {
   year: number;
@@ -52,7 +54,7 @@ export default function LastWinners() {
               team: race?.Results?.[0]?.Constructor?.name || 'No Team',
             };
           } catch (err) {
-            console.error(`Error fetching year ${year}:`, err);
+            console.log(`Error fetching year ${year}:`, err);
             return { year, winner: 'No Data', team: 'No Data' };
           }
         });
@@ -71,7 +73,7 @@ export default function LastWinners() {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator className="p-2" />;
+    return <Loading />;
   }
 
   if (error) {
@@ -84,7 +86,7 @@ export default function LastWinners() {
 
   return (
     <View className="flex-1 p-4">
-      <Text className="mb-4 text-3xl font-bold text-white">Last Wins</Text>
+      <Text className="mb-4 text-3xl font-bold text-white">Last Winners</Text>
       <View className="bg-[#2a2a2a] p-2">
         {winners.map((winner) => (
           <View key={winner.year} className="mb-2">

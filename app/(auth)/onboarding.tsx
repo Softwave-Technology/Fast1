@@ -38,7 +38,7 @@ export default function Onboarding() {
     router.replace('/login');
   };
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-black">
       <Text
         className="absolute self-center text-3xl font-bold text-white"
         style={{ paddingTop: 75 }}>
