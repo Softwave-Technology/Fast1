@@ -57,6 +57,63 @@ export default function Profile() {
     }
   };
 
+  const handleDeleteUser = async () => {
+    try {
+      Alert.alert(
+        'Delete Account',
+        'Are you sure you want to delete your account? This action is irreversible!',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: async () => {
+              if (!user) {
+                Alert.alert('Error', 'User is not logged in');
+                return;
+              }
+
+              setLoading(true);
+
+              try {
+                const session = await supabase.auth.getSession();
+                const accessToken = session?.data?.session?.access_token;
+
+                if (!accessToken) {
+                  Alert.alert('Error', 'No access token found. Please log in again.');
+                  return;
+                }
+
+                const response = await fetch(
+                  'https://uodkkohzqzjtyqhxbfva.functions.supabase.co/delete_user',
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      Authorization: `Bearer ${accessToken}`,
+                    },
+                  }
+                );
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to delete user');
+
+                Alert.alert('Success', 'Your account has been deleted.');
+                await supabase.auth.signOut(); // Log out after account deletion
+              } catch (error) {
+                Alert.alert('Something went wrong.');
+              } finally {
+                setLoading(false);
+              }
+            },
+          },
+        ]
+      );
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-[#11100f]">
       <View className="flex-1 bg-[#11100f] p-5">
@@ -104,6 +161,11 @@ export default function Profile() {
             {loading ? <Loading /> : <Text className="font-bold text-white">Change Password</Text>}
           </Pressable>
         </View>
+        <Pressable
+          onPress={handleDeleteUser}
+          className="m-4 items-center rounded-lg bg-red-600 p-4">
+          <Text className="font-bold text-white">Delete User</Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   );
