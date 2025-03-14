@@ -63,7 +63,7 @@ export default function RaceSchedule() {
               {nextRace?.FirstPractice?.date &&
                 nextRace?.FirstPractice?.time &&
                 new Date(`${nextRace.FirstPractice.date}T${nextRace.FirstPractice.time}`) <=
-                  new Date() && <MaterialIcons name="check" size={24} color="green" />}
+                  new Date() && <MaterialIcons name="check" size={24} color="lightgreen" />}
             </View>
           )}
           {nextRace?.SecondPractice?.time && (
@@ -77,13 +77,13 @@ export default function RaceSchedule() {
               {nextRace?.SecondPractice?.date &&
                 nextRace?.SecondPractice?.time &&
                 new Date(`${nextRace.SecondPractice.date}T${nextRace.SecondPractice.time}`) <=
-                  new Date() && <MaterialIcons name="check" size={24} color="green" />}
+                  new Date() && <MaterialIcons name="check" size={24} color="lightgreen" />}
             </View>
           )}
           {nextRace?.ThirdPractice?.time && (
             <View className="flex-row">
               <Text className="flex-1 text-lg font-semibold text-white">
-                Free Practice 2 :{' '}
+                Free Practice 3 :{' '}
                 {new Date(
                   `${nextRace.ThirdPractice?.date}T${nextRace.ThirdPractice?.time}`
                 ).toLocaleString()}
@@ -91,7 +91,7 @@ export default function RaceSchedule() {
               {nextRace?.ThirdPractice?.date &&
                 nextRace?.ThirdPractice?.time &&
                 new Date(`${nextRace.ThirdPractice.date}T${nextRace.ThirdPractice.time}`) <=
-                  new Date() && <MaterialIcons name="check" size={24} color="green" />}
+                  new Date() && <MaterialIcons name="check" size={24} color="lightgreen" />}
             </View>
           )}
           {nextRace?.Sprint?.time && (
@@ -103,7 +103,7 @@ export default function RaceSchedule() {
               {nextRace?.Sprint?.date &&
                 nextRace?.Sprint?.time &&
                 new Date(`${nextRace.Sprint.date}T${nextRace.Sprint.time}`) <= new Date() && (
-                  <MaterialIcons name="check" size={24} color="green" />
+                  <MaterialIcons name="check" size={24} color="lightgreen" />
                 )}
             </View>
           )}
@@ -118,7 +118,7 @@ export default function RaceSchedule() {
               {nextRace?.Qualifying?.date &&
                 nextRace?.Qualifying?.time &&
                 new Date(`${nextRace.Qualifying.date}T${nextRace.Qualifying.time}`) <=
-                  new Date() && <MaterialIcons name="check" size={24} color="green" />}
+                  new Date() && <MaterialIcons name="check" size={24} color="lightgreen" />}
             </View>
           )}
           {nextRace?.time && (
@@ -129,7 +129,7 @@ export default function RaceSchedule() {
               {nextRace?.date &&
                 nextRace?.time &&
                 new Date(`${nextRace.date}T${nextRace.time}`) <= new Date() && (
-                  <MaterialIcons name="check" size={24} color="green" />
+                  <MaterialIcons name="check" size={24} color="lightgreen" />
                 )}
             </View>
           )}

@@ -71,7 +71,6 @@ export default function UpcomingRace() {
   return (
     <View className="mt-3 p-2">
       <View>
-        <Text className="p-2 text-4xl font-bold text-white ">Upcoming Race</Text>
         {nextRace ? (
           <View className="m-1 gap-2 rounded-lg bg-[#2a2a2a] p-2">
             <Text className="text-xl font-semibold text-white">{nextRace.raceName}</Text>

@@ -39,6 +39,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="poll"
+        options={{
+          title: 'Winner Prediction',
+          tabBarIcon: ({ color }) => <FontAwesome5 name="poll" color={color} size={30} />,
+        }}
+      />
+      <Tabs.Screen
         name="circuit"
         options={{
           title: 'Circuits',

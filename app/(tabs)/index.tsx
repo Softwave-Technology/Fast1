@@ -13,7 +13,7 @@ import UpcomingRace from '~/components/UpcomingRace';
 export default function LandingPage() {
   const { width, height } = useWindowDimensions();
   return (
-    <ScrollView className="flex-1 bg-[#11100f]">
+    <ScrollView className="flex-1 bg-[#11100f]" showsVerticalScrollIndicator={false}>
       <Image
         source={banner}
         style={{
@@ -23,6 +23,7 @@ export default function LandingPage() {
           alignItems: 'center',
         }}
       />
+      <Text className="mt-3 px-4 text-4xl font-bold text-white ">Upcoming Race</Text>
       <UpcomingRace />
       <LastWinners />
       <RaceSchedule />
