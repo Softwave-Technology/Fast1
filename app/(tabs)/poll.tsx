@@ -1,47 +1,53 @@
-import { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, Pressable } from 'react-native';
 
-import Loading from '~/components/Loading';
+import { fetchDriverNames, getPoll, createPollForNextRace } from '../../utils/fetchPolls';
+
 import UpcomingRace from '~/components/UpcomingRace';
-import { Driver } from '~/types/types';
 
 export default function PollPage() {
-  const [drivers, setDrivers] = useState<Driver[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetchDrivers = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('https://api.jolpi.ca/ergast/f1/2025/drivers.json');
-      const data = await response.json();
-      const driverList = data?.MRData?.DriverTable?.Drivers || [];
-      setDrivers(driverList);
-    } catch (error) {
-      console.log('Error while fetching drivers ', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [poll, setPoll] = useState<{ id: string; question: string } | null>(null);
+  const [drivers, setDrivers] = useState<string[]>([]);
+  const [selectedDriver, setSelectedDriver] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchDrivers();
+    const loadPoll = async () => {
+      let activePoll = await getPoll();
+
+      if (!activePoll) {
+        activePoll = await createPollForNextRace();
+      }
+
+      setPoll(activePoll);
+
+      const driverList = await fetchDriverNames();
+      setDrivers(driverList);
+    };
+
+    loadPoll();
   }, []);
 
-  if (loading) return <Loading />;
-
   return (
-    <View className="flex-1 bg-[#11100f]">
-      <View>
-        <UpcomingRace />
-      </View>
-      {drivers.length === 0 ? (
-        <Text className="mt-4 text-center text-white">No drivers found.</Text>
+    <View className="flex-1 bg-[#11100f] p-4">
+      <UpcomingRace />
+
+      {poll ? (
+        <View className="mt-6">
+          <Text className="text-lg font-bold text-white">{poll.question}</Text>
+
+          <View className="mt-4">
+            {drivers.map((driver) => (
+              <Pressable
+                key={driver}
+                className={`my-2 rounded-lg p-3 ${selectedDriver === driver ? 'bg-red-500' : 'bg-gray-800'}`}
+                onPress={() => setSelectedDriver(driver)}>
+                <Text className="text-white">{driver}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
       ) : (
-        drivers.map((driver) => (
-          <Text key={driver.driverId} className="text-white">
-            {driver.givenName} {driver.familyName}
-          </Text>
-        ))
+        <Text className="mt-6 text-gray-400">Loading poll...</Text>
       )}
     </View>
   );
