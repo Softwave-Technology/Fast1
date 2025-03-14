@@ -1,7 +1,5 @@
 import { supabase } from './supabase';
 
-import { Driver } from '~/types/types';
-
 export const fetchNextRace = async () => {
   const response = await fetch('https://api.jolpi.ca/ergast/f1/current.json');
   const data = await response.json();
@@ -10,46 +8,76 @@ export const fetchNextRace = async () => {
   const upcomingRace = fetchedRaces.find(
     (race: { date: string; time: string }) => new Date(`${race.date}T${race.time}`) > new Date()
   );
-  return upcomingRace;
+  return upcomingRace || null;
 };
 
-export const fetchDriverNames = async () => {
-  const response = await fetch('https://api.jolpi.ca/ergast/f1/current/drivers.json');
-  const data = await response.json();
-  const driverNames = data.MRData.DriverTable.Drivers.map(
-    (driver: Driver) => driver.givenName + ' ' + driver.familyName
-  );
-  return driverNames;
+// Manually defined driver names
+export const drivers = [
+  { givenName: 'George', familyName: 'Russell' },
+  { givenName: 'Andrea Kimi', familyName: 'Antonelli' },
+  { givenName: 'Charles', familyName: 'Leclerc' },
+  { givenName: 'Lewis', familyName: 'Hamilton' },
+  { givenName: 'Max', familyName: 'Verstappen' },
+  { givenName: 'Liam', familyName: 'Lawson' },
+  { givenName: 'Lando', familyName: 'Norris' },
+  { givenName: 'Oscar', familyName: 'Piastri' },
+  { givenName: 'Alexander', familyName: 'Albon' },
+  { givenName: 'Carlos', familyName: 'Sainz' },
+  { givenName: 'Fernando', familyName: 'Alonso' },
+  { givenName: 'Lance', familyName: 'Stroll' },
+  { givenName: 'Pierre', familyName: 'Gasly' },
+  { givenName: 'Jack', familyName: 'Doohan' },
+  { givenName: 'Yuki', familyName: 'Tsunoda' },
+  { givenName: 'Isack', familyName: 'Hadjar' },
+  { givenName: 'Esteban', familyName: 'Ocon' },
+  { givenName: 'Oliver', familyName: 'Bearman' },
+  { givenName: 'Nico', familyName: 'Hülkenberg' },
+  { givenName: 'Gabriel', familyName: 'Bortoleto' },
+];
+
+// Returns list of full driver names
+export const fetchDriverNames = () => {
+  return drivers.map((driver) => `${driver.givenName} ${driver.familyName}`);
 };
 
+// Creates a poll for the next race
 export const createPollForNextRace = async () => {
   const race = await fetchNextRace();
   if (!race) {
     console.log('No upcoming race found.');
     return null;
   }
-  const driverNames = await fetchDriverNames();
-  if (!driverNames.lenght) {
+
+  const driverNames = fetchDriverNames();
+  if (driverNames.length === 0) {
     console.log('No driver names found');
     return null;
   }
 
-  const { data: existingPoll } = await supabase
+  // Check if poll already exists
+  const { data: existingPoll, error: pollCheckError } = await supabase
     .from('polls')
     .select('*')
     .eq('race_id', race.round)
     .single();
 
+  if (pollCheckError && pollCheckError.code !== 'PGRST116') {
+    console.error('Error checking for existing poll:', pollCheckError);
+    return null;
+  }
+
   if (existingPoll) {
-    console.log('Poll already exist. ', existingPoll);
+    console.log('Poll already exists.', existingPoll);
     return existingPoll;
   }
-  const { data: newPoll, error } = await supabase
+
+  // Insert new poll
+  const { data: newPoll, error: insertError } = await supabase
     .from('polls')
     .insert([
       {
         race_id: race.round,
-        questions: `Who will win the ${race.raceName}?`,
+        question: `Who will win the ${race.raceName}?`,
         options: driverNames,
         expires_at: `${race.date}T23:59:59Z`,
       },
@@ -57,28 +85,27 @@ export const createPollForNextRace = async () => {
     .select('*')
     .single();
 
-  if (error) {
-    console.error('Error while creating new poll', error);
+  if (insertError) {
+    console.error('Error creating new poll:', insertError);
     return null;
   }
 
   return newPoll;
 };
 
+// Fetches the latest poll
 export const getPoll = async () => {
-  const { data, error } = await supabase
-    .from('polls')
-    .select('*')
-    .gt('expires_at', new Date().toISOString())
-    .single();
+  const { data, error } = await supabase.from('polls').select('*').maybeSingle();
 
   if (error) {
-    console.error('Error while fetching poll', error);
+    console.error('Error fetching poll:', error);
     return null;
   }
+
   return data;
 };
 
+// Submits a vote for a poll
 export const submitVote = async (pollId: string, userId: string, selectedDriver: string) => {
   const { error } = await supabase
     .from('poll_votes')
@@ -88,12 +115,13 @@ export const submitVote = async (pollId: string, userId: string, selectedDriver:
     );
 
   if (error) {
-    console.error('Error while submitting vote', error);
+    console.error('Error submitting vote:', error);
     return false;
   }
   return true;
 };
 
+// Gets poll results
 export const getPollResults = async (pollId: string) => {
   const { data, error } = await supabase
     .from('poll_votes')
