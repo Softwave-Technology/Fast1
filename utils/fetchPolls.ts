@@ -123,19 +123,30 @@ export const submitVote = async (pollId: string, userId: string, selectedDriver:
 
 // Gets poll results
 export const getPollResults = async (pollId: string) => {
-  const { data, error } = await supabase
-    .from('poll_votes')
-    .select('vote, count:vote', { head: false, count: 'exact' })
-    .eq('poll_id', pollId)
-    .order('count', { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from('poll_votes')
+      .select('vote') // Get all votes
+      .eq('poll_id', pollId);
 
-  if (error) {
-    console.error('Error fetching poll results:', error);
-    return [];
+    if (error) {
+      console.error('Error fetching poll results:', error);
+      return [];
+    }
+
+    // Manually count votes per driver
+    const results = data.reduce(
+      (acc, { vote }) => {
+        acc[vote] = (acc[vote] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+
+    console.log('Poll results:', results);
+    return results;
+  } catch (err) {
+    console.error('Unexpected error fetching poll results:', err);
+    return {};
   }
-
-  return data.map((item: any) => ({
-    vote: item.vote,
-    count: item.count || 0,
-  }));
 };

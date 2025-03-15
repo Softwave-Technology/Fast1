@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { useFocusEffect } from 'expo-router';
+import { useState, useEffect, useCallback } from 'react';
+import { View, Text, Pressable, ScrollView, Dimensions } from 'react-native';
+import { PieChart } from 'react-native-chart-kit';
 
-import { getPoll, createPollForNextRace, submitVote } from '../../utils/fetchPolls';
+import { getPoll, createPollForNextRace, submitVote, getPollResults } from '../../utils/fetchPolls';
 
 import UpcomingRace from '~/components/UpcomingRace';
 import { supabase } from '~/utils/supabase';
@@ -11,6 +13,7 @@ export default function PollPage() {
   const [drivers, setDrivers] = useState<string[]>([]);
   const [selectedDriver, setSelectedDriver] = useState<string | null>(null);
   const [userId, setUserId] = useState('');
+  const [pollResults, setPollResults] = useState<{ name: string; count: number }[]>([]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -21,17 +24,55 @@ export default function PollPage() {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    const loadPoll = async () => {
-      let activePoll = await getPoll();
-      if (!activePoll) {
-        activePoll = await createPollForNextRace();
-      }
-      setPoll(activePoll);
-      setDrivers(activePoll?.options || []);
-    };
-    loadPoll();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const loadPoll = async () => {
+        let activePoll = await getPoll();
+        if (!activePoll) {
+          activePoll = await createPollForNextRace();
+        }
+        setPoll(activePoll);
+        setDrivers(activePoll?.options || []);
+        const userVote = await fetchUserVote(activePoll.id);
+        setSelectedDriver(userVote);
+        const results = await getPollResults(activePoll.id);
+        setPollResults(
+          Object.entries(results).map(([name, count]) => ({
+            name,
+            count,
+            color: getRandomColor(),
+            legendFontColor: 'white',
+            legendFontSize: 12,
+          }))
+        );
+      };
+      loadPoll();
+    }, [])
+  );
+
+  const fetchUserVote = async (pollId: string) => {
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !sessionData?.session?.user) {
+      console.error('Error fetching session:', sessionError);
+      return null;
+    }
+
+    const userId = sessionData.session.user.id;
+    if (!userId) return null;
+
+    const { data: userVote, error } = await supabase
+      .from('poll_votes')
+      .select('vote')
+      .eq('poll_id', pollId)
+      .eq('user_id', userId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      console.error('Error fetching user vote:', error);
+    }
+
+    return userVote?.vote || null;
+  };
 
   const handleVote = async () => {
     if (!poll?.id || !userId || !selectedDriver) {
@@ -46,11 +87,39 @@ export default function PollPage() {
     }
   };
 
+  const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
   return (
     <View className="flex-1 bg-[#11100f] p-4">
       <ScrollView>
         <UpcomingRace />
-
+        {pollResults.length > 0 && (
+          <View className="mt-6 items-center">
+            <Text className="text-lg font-bold text-white">Poll Results</Text>
+            <PieChart
+              data={pollResults}
+              width={Dimensions.get('window').width - 50}
+              height={220}
+              chartConfig={{
+                backgroundColor: '#11100f',
+                backgroundGradientFrom: '#11100f',
+                backgroundGradientTo: '#11100f',
+                color: () => `rgba(255, 255, 255, 1)`,
+              }}
+              accessor="count"
+              backgroundColor="transparent"
+              paddingLeft="15"
+              absolute
+            />
+          </View>
+        )}
         {poll ? (
           <View className="mt-6">
             {poll.question ? (
@@ -74,6 +143,7 @@ export default function PollPage() {
           <Text className="mt-6 text-gray-400">Loading poll...</Text>
         )}
       </ScrollView>
+
       <Pressable
         className={`m-2 mb-4 items-center rounded-lg p-4 ${selectedDriver ? 'bg-red-600' : 'bg-gray-500'}`}
         disabled={!selectedDriver}
