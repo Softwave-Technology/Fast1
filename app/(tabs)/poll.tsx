@@ -79,9 +79,22 @@ export default function PollPage() {
       alert('Please select a driver to vote.');
       return;
     }
+
     const success = await submitVote(poll.id, userId, selectedDriver);
     if (success) {
       alert('Vote submitted successfully!');
+
+      // Fetch updated results after voting
+      const results = await getPollResults(poll.id);
+      setPollResults(
+        Object.entries(results).map(([name, count]) => ({
+          name,
+          count,
+          color: getRandomColor(),
+          legendFontColor: 'white',
+          legendFontSize: 12,
+        }))
+      );
     } else {
       alert('Error submitting vote. Try again.');
     }
@@ -102,7 +115,7 @@ export default function PollPage() {
         <UpcomingRace />
         {pollResults.length > 0 && (
           <View className="mt-6 items-center">
-            <Text className="text-lg font-bold text-white">Poll Results</Text>
+            <Text className="text-xl font-bold text-white">Poll Results</Text>
             <PieChart
               data={pollResults}
               width={Dimensions.get('window').width - 50}
@@ -147,8 +160,8 @@ export default function PollPage() {
       <Pressable
         className={`m-2 mb-4 items-center rounded-lg p-4 ${selectedDriver ? 'bg-red-600' : 'bg-gray-500'}`}
         disabled={!selectedDriver}
-        onPress={handleVote}>
-        <Text className="font-2xl font-bold text-white">VOTE</Text>
+        onPress={userId ? handleVote : () => alert('Sign in to vote!')}>
+        <Text className="font-2xl font-bold text-white">{userId ? 'VOTE' : 'SIGN IN TO VOTE'}</Text>
       </Pressable>
     </View>
   );
