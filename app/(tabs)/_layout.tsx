@@ -1,12 +1,14 @@
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
-import { Redirect, Tabs } from 'expo-router';
+import { User } from '@supabase/auth-js';
+import { Redirect, router, Tabs } from 'expo-router';
 
 import { useAuth } from '~/context/AuthContext';
 import { supabase } from '~/utils/supabase';
 
 export default function TabLayout() {
-  const { user }: any = useAuth();
-  if (!user) return <Redirect href="/(auth)/onboarding" />;
+  const { user }: User | any = useAuth();
+  if (!user) return <Redirect href="/onboarding" />;
+
   return (
     <Tabs
       screenOptions={{
@@ -63,7 +65,10 @@ export default function TabLayout() {
               size={20}
               color="white"
               className="p-2"
-              onPress={() => supabase.auth.signOut()}
+              onPress={() => {
+                supabase.auth.signOut();
+                router.push('/onboarding');
+              }}
             />
           ),
         }}

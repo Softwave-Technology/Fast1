@@ -118,11 +118,8 @@ export default function Profile() {
     <SafeAreaView className="flex-1 bg-[#11100f]">
       <View className="flex-1 bg-[#11100f] p-5">
         <View className="mb-4 rounded-lg bg-[#1a1a1a] p-4">
-          {/* User Information */}
           <Text className="text-lg text-white">Email: {user.email}</Text>
         </View>
-
-        {/* Password Change Form */}
         <View className="rounded-lg bg-[#1a1a1a] p-4">
           <Text className="mb-2 text-white">Old Password</Text>
           <TextInput

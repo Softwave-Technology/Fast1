@@ -5,6 +5,7 @@ import { PieChart } from 'react-native-chart-kit';
 
 import { getPoll, createPollForNextRace, submitVote, getPollResults } from '../../utils/fetchPolls';
 
+import Loading from '~/components/Loading';
 import UpcomingRace from '~/components/UpcomingRace';
 import { supabase } from '~/utils/supabase';
 
@@ -14,6 +15,7 @@ export default function PollPage() {
   const [selectedDriver, setSelectedDriver] = useState<string | null>(null);
   const [userId, setUserId] = useState('');
   const [pollResults, setPollResults] = useState<{ name: string; count: number }[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -46,6 +48,7 @@ export default function PollPage() {
           }))
         );
       };
+      setLoading(false);
       loadPoll();
     }, [])
   );
@@ -108,6 +111,8 @@ export default function PollPage() {
     }
     return color;
   };
+
+  if (loading) return <Loading />;
 
   return (
     <View className="flex-1 bg-[#11100f] p-4">
