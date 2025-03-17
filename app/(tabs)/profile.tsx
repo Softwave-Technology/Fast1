@@ -161,7 +161,7 @@ export default function Profile() {
         <Pressable
           onPress={handleDeleteUser}
           className="m-4 items-center rounded-lg bg-red-600 p-4">
-          <Text className="font-bold text-white">Delete User</Text>
+          <Text className="font-bold text-white">Delete Account</Text>
         </Pressable>
       </View>
     </SafeAreaView>

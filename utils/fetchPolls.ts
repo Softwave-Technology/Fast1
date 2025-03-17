@@ -8,6 +8,7 @@ export const fetchNextRace = async () => {
   const upcomingRace = fetchedRaces.find(
     (race: { date: string; time: string }) => new Date(`${race.date}T${race.time}`) > new Date()
   );
+  console.log('Upcoming race is: ', upcomingRace);
   return upcomingRace || null;
 };
 
@@ -40,8 +41,10 @@ export const fetchDriverNames = () => {
   return drivers.map((driver) => `${driver.givenName} ${driver.familyName}`);
 };
 
-// Creates a poll for the next race
+// Creates a poll for the next race if it doesn't already exist
 export const createPollForNextRace = async () => {
+  console.log('Starting createPollForNextRace...');
+
   const race = await fetchNextRace();
   if (!race) {
     console.log('No upcoming race found.');
@@ -50,28 +53,23 @@ export const createPollForNextRace = async () => {
 
   const driverNames = fetchDriverNames();
   if (driverNames.length === 0) {
-    console.log('No driver names found');
+    console.log('No driver names found.');
     return null;
   }
 
-  // Check if poll already exists
-  const { data: existingPoll, error: pollCheckError } = await supabase
+  console.log(`Checking if poll exists for race ID: ${race.round}...`);
+  const { data: existingPoll, error: existingPollError } = await supabase
     .from('polls')
     .select('*')
-    .eq('race_id', race.round)
-    .single();
-
-  if (pollCheckError && pollCheckError.code !== 'PGRST116') {
-    console.error('Error checking for existing poll:', pollCheckError);
-    return null;
-  }
+    .eq('race_id', race.round) // Fetch poll for current race
+    .maybeSingle();
 
   if (existingPoll) {
-    console.log('Poll already exists.', existingPoll);
-    return existingPoll;
+    console.log('Poll already exists for this race. No need to create a new one.');
+    return existingPoll; // Return the existing poll
   }
 
-  // Insert new poll
+  console.log('Inserting new poll...');
   const { data: newPoll, error: insertError } = await supabase
     .from('polls')
     .insert([
@@ -90,12 +88,23 @@ export const createPollForNextRace = async () => {
     return null;
   }
 
+  console.log('New poll created:', newPoll);
   return newPoll;
 };
 
-// Fetches the latest poll
+// Fetches the poll for the upcoming race
 export const getPoll = async () => {
-  const { data, error } = await supabase.from('polls').select('*').maybeSingle();
+  const race = await fetchNextRace();
+  if (!race) {
+    console.log('No upcoming race found. Cannot fetch poll.');
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from('polls')
+    .select('*')
+    .eq('race_id', race.round) // Fetch only the poll for the upcoming race
+    .maybeSingle();
 
   if (error) {
     console.error('Error fetching poll:', error);
@@ -134,7 +143,7 @@ export const getPollResults = async (pollId: string) => {
       return [];
     }
 
-    // Manually count votes per driver
+    // Count votes per driver
     const results = data.reduce(
       (acc, { vote }) => {
         acc[vote] = (acc[vote] || 0) + 1;
