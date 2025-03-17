@@ -50,7 +50,7 @@ export default function Profile() {
       } else {
         Alert.alert('Success', 'Password updated successfully');
       }
-    } catch (error) {
+    } catch (error: any) {
       Alert.alert('Error', 'Something went wrong. Please try again later ');
     } finally {
       setLoading(false);
@@ -100,7 +100,7 @@ export default function Profile() {
 
                 Alert.alert('Success', 'Your account has been deleted.');
                 await supabase.auth.signOut(); // Log out after account deletion
-              } catch (error) {
+              } catch (error: any) {
                 Alert.alert('Something went wrong.');
               } finally {
                 setLoading(false);
@@ -109,10 +109,18 @@ export default function Profile() {
           },
         ]
       );
-    } catch (error) {
+    } catch (error: any) {
       Alert.alert('Error', 'Something went wrong. Please try again.');
     }
   };
+
+  if (user.is_anonymous) {
+    return (
+      <View className="flex-1 items-center justify-center bg-[#11100f] p-4">
+        <Text className="text-center font-bold text-white">Signed in as Guest.</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-[#11100f]">
