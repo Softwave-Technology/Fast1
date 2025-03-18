@@ -8,7 +8,6 @@ export const fetchNextRace = async () => {
   const upcomingRace = fetchedRaces.find(
     (race: { date: string; time: string }) => new Date(`${race.date}T${race.time}`) > new Date()
   );
-  console.log('Upcoming race is: ', upcomingRace);
   return upcomingRace || null;
 };
 
@@ -43,8 +42,6 @@ export const fetchDriverNames = () => {
 
 // Creates a poll for the next race if it doesn't already exist
 export const createPollForNextRace = async () => {
-  console.log('Starting createPollForNextRace...');
-
   const race = await fetchNextRace();
   if (!race) {
     console.log('No upcoming race found.');
@@ -57,7 +54,6 @@ export const createPollForNextRace = async () => {
     return null;
   }
 
-  console.log(`Checking if poll exists for race ID: ${race.round}...`);
   const { data: existingPoll, error: existingPollError } = await supabase
     .from('polls')
     .select('*')
@@ -69,7 +65,6 @@ export const createPollForNextRace = async () => {
     return existingPoll; // Return the existing poll
   }
 
-  console.log('Inserting new poll...');
   const { data: newPoll, error: insertError } = await supabase
     .from('polls')
     .insert([
@@ -88,7 +83,6 @@ export const createPollForNextRace = async () => {
     return null;
   }
 
-  console.log('New poll created:', newPoll);
   return newPoll;
 };
 
@@ -152,7 +146,6 @@ export const getPollResults = async (pollId: string) => {
       {} as Record<string, number>
     );
 
-    console.log('Poll results:', results);
     return results;
   } catch (err) {
     console.error('Unexpected error fetching poll results:', err);
