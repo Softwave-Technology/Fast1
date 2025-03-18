@@ -86,7 +86,7 @@ export default function LastWinners() {
 
   return (
     <View className="flex-1 p-4">
-      <Text className="mb-4 text-3xl font-bold text-white">Last Winners</Text>
+      <Text className="mb-4 text-2xl font-bold text-white">Last Winners for Upcoming Race</Text>
       <View className="bg-[#2a2a2a] p-2">
         {winners.map((winner) => (
           <View key={winner.year} className="mb-2">

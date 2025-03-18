@@ -49,7 +49,7 @@ export default function RaceSchedule() {
 
   return (
     <View className="flex-1 p-4">
-      <Text className="mb-2 text-3xl font-bold text-white">Race Schedule</Text>
+      <Text className="mb-2 text-2xl font-bold text-white">Race Schedule</Text>
       <View className="bg-[#2a2a2a] p-2">
         <View className="gap-2">
           {nextRace?.FirstPractice?.time && (

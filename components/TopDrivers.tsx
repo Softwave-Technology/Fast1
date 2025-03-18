@@ -61,10 +61,10 @@ export default function TopDrivers() {
 
   return (
     <View className="p-4">
-      <Text className="mb-3 text-2xl font-bold text-white">Top 3 Drivers</Text>
+      <Text className="mb-3 text-xl font-bold text-white">Drivers</Text>
       {topDrivers.map((driver, index) => (
         <View key={driver.Driver.driverId} className="mb-2">
-          <Text className={`text-xl font-bold ${positionStyles[index]}`}>
+          <Text className={`text-lg font-bold ${positionStyles[index]}`}>
             {index + 1}. {driver.Driver.givenName} {driver.Driver.familyName}
           </Text>
           <Text className="text-lg font-semibold text-white">Points: {driver.points}</Text>
