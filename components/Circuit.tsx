@@ -11,7 +11,7 @@ export default function CircuitsMap() {
 
   const fetchCircuits = async () => {
     try {
-      const response = await fetch('http://api.jolpi.ca/ergast/f1/current/circuits.json');
+      const response = await fetch('https://api.jolpi.ca/ergast/f1/current/circuits.json');
       const data = await response.json();
       const circuitData = data.MRData.CircuitTable.Circuits;
 

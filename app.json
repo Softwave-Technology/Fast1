@@ -2,7 +2,7 @@
   "expo": {
     "name": "Fast 1",
     "slug": "fast-1",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "scheme": "fast-1",
     "web": {
       "bundler": "metro",
