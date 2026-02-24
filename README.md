@@ -1,6 +1,6 @@
 # 🏎️ Fast1 — Formula 1 App
 
-An all-in-one Formula 1 companion app. Track live race data, driver and constructor standings, and explore up-to-date race information. Stay connected with official F1 news and media — **now available for Closed Testing on the Google Play Store**. Public release coming soon!
+An all-in-one Formula 1 companion app. Track live race data, driver and constructor standings, and explore up-to-date race information. Stay connected with official F1 news and media — **Now available on App Store! Version 2 coming soon!
 
 ---
 
